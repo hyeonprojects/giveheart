@@ -1,0 +1,75 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    "indent": [
+      "error",
+      4,
+      { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }
+    ],
+    "semi": ["error", "always"],
+    "array-element-newline": [
+      "error",
+      "never",
+      {
+        "ArrayExpression": { "multiline": true, "minItems": 3 }
+      }
+    ],
+    "quotes": [2, "single"],
+    "eqeqeq": [2, "allow-null"],
+    "no-empty": ["error", { "allowEmptyCatch": false }],
+    "eol-last": 2,
+    "space-in-parens": [2, "never"],
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+    "space-before-blocks": [2, "always"],
+    "brace-style": [2, "1tbs", { "allowSingleLine": true }],
+    "function-paren-newline": ["error", "consistent"],
+    "object-property-newline": [
+      "error",
+      { "allowAllPropertiesOnSameLine": false }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": { "multiline": true, "minProperties": 3 },
+        "ObjectPattern": { "multiline": true },
+        "ImportDeclaration": { "multiline": true, "minProperties": 3 },
+        "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+      }
+    ],
+    "array-elemental-newline": ["error", { "multiline": true, "minItems": 3 }],
+    "object-curly-spacing": ["error", "always"],
+    "function-call-argument-newline": ["error", "never"],
+    "comma-dangle": ["error", "always-multiline"],
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-warning-comments": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/ban-types": "off",
+    "node/no-missing-import": "off",
+    "node/no-empty-function": "off",
+    "node/no-unsupported-features/es-syntax": "off",
+    "node/no-missing-require": "off",
+    "node/shebang": "off",
+    "no-dupe-class-members": "off",
+    "require-atomic-updates": "off",
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
+}
