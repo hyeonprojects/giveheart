@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { User } from '@prisma/client';
+import { CreateUserPayload } from '../interface/user.interface';
 
 @Injectable()
 export class UsersRepository {
@@ -28,5 +29,12 @@ export class UsersRepository {
                 phone,
             },
         });
+    }
+
+    async createUser(payload: CreateUserPayload): Promise<User> {
+        const user: User = await this.prisma.user.create({
+            data: { ...payload },
+        });
+        return user;
     }
 }
