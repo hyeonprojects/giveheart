@@ -10,7 +10,12 @@ export interface RegisterPayload {
     userType: UserType;
 }
 
-export interface RegisterOutput {
+export interface AuthOutput {
     accessToken: string;
     refreshToken: string;
+}
+
+export interface LoginPayload {
+    email: string;
+    password: string;
 }

@@ -51,3 +51,19 @@ export class LoginDto {
     @IsBase64()
     password!: string;
 }
+
+export class RefreshTokenDto {
+    @ApiProperty({ description: '리프레시 토큰' })
+    @IsString()
+    refreshToken!: string;
+}
+
+export class AuthOutputDto {
+    @ApiProperty({ description: '액세스 토큰' })
+    @IsString()
+    accessToken!: string;
+
+    @ApiProperty({ description: '리프레시 토큰' })
+    @IsString()
+    refreshToken!: string;
+}

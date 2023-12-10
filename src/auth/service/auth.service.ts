@@ -1,6 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../users/service/users.service';
-import { RegisterOutput, RegisterPayload } from '../interface/auth.interface';
+import {
+    LoginPayload,
+    AuthOutput,
+    RegisterPayload,
+} from '../interface/auth.interface';
 import { SharedService } from '../../shared/service/shared.service';
 import { User } from '@prisma/client';
 import { TokenService } from './token.service';
@@ -15,26 +19,24 @@ export class AuthService {
 
     /**
      * 회원가입 기능
-     * @param signInPayload
+     * @param payload
      */
-    async register(signInPayload: RegisterPayload): Promise<RegisterOutput> {
-        signInPayload.password = await this.sharedService.decodeBase64(
-            signInPayload.password,
+    async register(payload: RegisterPayload): Promise<AuthOutput> {
+        payload.password = await this.sharedService.decodeBase64(
+            payload.password,
         );
 
-        const user = await this.usersService.findUserByEmail(
-            signInPayload.email,
-        );
+        const user = await this.usersService.findUserByEmail(payload.email);
         if (user) {
             throw new UnauthorizedException('이미 가입된 이메일입니다.');
         }
 
         const encryptedPassword = await this.sharedService.encrypt(
-            signInPayload.password,
+            payload.password,
         );
 
         const createdUser: User = await this.usersService.createUser({
-            ...signInPayload,
+            ...payload,
             password: encryptedPassword,
         });
 
@@ -55,8 +57,12 @@ export class AuthService {
         };
     }
 
-    async validateUser(id: string): Promise<any> {
-        const user = await this.usersService.findUserById(id);
+    /**
+     * login
+     * @param payload
+     */
+    async login(payload: LoginPayload): Promise<AuthOutput> {
+        const user = await this.usersService.findUserByEmail(payload.email);
         if (!user) {
             throw new UnauthorizedException('Not User Authenticated');
         }
@@ -65,5 +71,57 @@ export class AuthService {
         if (user.deletedAt) {
             throw new UnauthorizedException('Not User Authenticated');
         }
+
+        // 비밀번호 체크
+        payload.password = await this.sharedService.decodeBase64(
+            payload.password,
+        );
+
+        const encryptedPassword = await this.sharedService.encrypt(
+            payload.password,
+        );
+        if (encryptedPassword !== user.password) {
+            throw new UnauthorizedException('Not User Authenticated');
+        }
+
+        // token 발행
+        const accessToken = await this.tokenService.createAccessToken(
+            user.id,
+            user.email,
+        );
+
+        const refreshToken = await this.tokenService.createRefreshToken(
+            user.id,
+            user.email,
+        );
+
+        return {
+            accessToken,
+            refreshToken,
+        };
+    }
+
+    /**
+     * Token Refresh
+     * @param token
+     */
+    async tokenRefresh(token: string): Promise<AuthOutput> {
+        // todo: refresh token 캐쉬
+        const decoded = await this.tokenService.verifyRefreshToken(token);
+
+        const accessToken = await this.tokenService.createAccessToken(
+            decoded.userId,
+            decoded.email,
+        );
+
+        const refreshToken = await this.tokenService.createRefreshToken(
+            decoded.userId,
+            decoded.email,
+        );
+
+        return {
+            accessToken,
+            refreshToken,
+        };
     }
 }
