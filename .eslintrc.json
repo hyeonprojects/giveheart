@@ -23,9 +23,8 @@
     "semi": ["error", "always"],
     "array-element-newline": [
       "error",
-      "never",
       {
-        "ArrayExpression": { "multiline": true, "minItems": 3 }
+        "ArrayExpression": { "multiline": true, "minItems": 4 }
       }
     ],
     "quotes": [2, "single"],
@@ -50,7 +49,6 @@
         "ExportDeclaration": { "multiline": true, "minProperties": 3 }
       }
     ],
-    "array-elemental-newline": ["error", { "multiline": true, "minItems": 3 }],
     "object-curly-spacing": ["error", "always"],
     "function-call-argument-newline": ["error", "never"],
     "comma-dangle": ["error", "always-multiline"],
