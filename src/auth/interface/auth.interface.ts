@@ -9,3 +9,8 @@ export interface RegisterPayload {
     phone: string;
     userType: UserType;
 }
+
+export interface RegisterOutput {
+    accessToken: string;
+    refreshToken: string;
+}

@@ -24,4 +24,12 @@ export class SharedService {
         decrypted += decipher.final('utf8');
         return decrypted;
     }
+
+    async encodeBase64(text: string) {
+        return Buffer.from(text).toString('base64');
+    }
+
+    async decodeBase64(text: string) {
+        return Buffer.from(text, 'base64').toString('utf-8');
+    }
 }
