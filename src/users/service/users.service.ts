@@ -15,7 +15,7 @@ export class UsersService {
         return this.usersRepository.findUserByEmail(email);
     }
 
-    async createUser(payload: CreateUserPayload): Promise<User> {
+    async createUser(payload: CreateUserPayload): Promise<User | null> {
         return this.usersRepository.createUser({ ...payload });
     }
 }

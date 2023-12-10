@@ -9,7 +9,7 @@ import { TokenService } from './token.service';
 export class AuthService {
     constructor(
         private sharedService: SharedService,
-        private usersSerivce: UsersService,
+        private usersService: UsersService,
         private tokenService: TokenService,
     ) {}
 
@@ -22,7 +22,7 @@ export class AuthService {
             signInPayload.password,
         );
 
-        const user = await this.usersSerivce.findUserByEmail(
+        const user = await this.usersService.findUserByEmail(
             signInPayload.email,
         );
         if (user) {
@@ -33,7 +33,7 @@ export class AuthService {
             signInPayload.password,
         );
 
-        const createdUser: User = await this.usersSerivce.createUser({
+        const createdUser: User = await this.usersService.createUser({
             ...signInPayload,
             password: encryptedPassword,
         });
@@ -56,7 +56,7 @@ export class AuthService {
     }
 
     async validateUser(id: string): Promise<any> {
-        const user = await this.usersSerivce.findUserById(id);
+        const user = await this.usersService.findUserById(id);
         if (!user) {
             throw new UnauthorizedException('Not User Authenticated');
         }

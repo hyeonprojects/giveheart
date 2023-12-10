@@ -4,31 +4,30 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { AuthService } from '../service/auth.service';
+import { TokenService } from '../service/token.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private authService: AuthService) {}
+    constructor(private tokenService: TokenService) {}
 
-    canActivate(
-        context: ExecutionContext,
-    ): boolean | Promise<boolean> | Observable<boolean> {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        const token = this.extractJwtFromRequest(request);
+        const token = this.extractTokenFromHeader(request);
         if (!token) {
-            throw new UnauthorizedException('Not User Authenticated');
+            throw new UnauthorizedException('토큰이 없습니다.');
         }
         try {
-            const decoded = this.authService.validateUser();
-        } catch (e) {
-            throw new UnauthorizedException('Not User Authenticated');
+            const payload = await this.tokenService.verifyAccessToken(token);
+            request['user'] = payload;
+        } catch {
+            throw new UnauthorizedException('토큰이 유효하지 않습니다.');
         }
         return true;
     }
 
-    private extractJwtFromRequest(request: Request): string | undefined {
-        const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    private extractTokenFromHeader(request: Request): string | undefined {
+        const [type, token] =
+            request.headers.get('authorization')?.split(' ') ?? [];
         return type === 'Bearer' ? token : undefined;
     }
 }

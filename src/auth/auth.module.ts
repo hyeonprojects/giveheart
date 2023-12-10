@@ -7,10 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { SharedService } from '../shared/service/shared.service';
 import { TokenService } from './service/token.service';
 import * as process from 'process';
+import { UsersModule } from '../users/users.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
     imports: [
-        UsersService,
+        UsersModule,
+        PrismaModule,
         PassportModule,
         JwtModule.register({
             secret: process.env.JWT_SECRET,
@@ -18,6 +21,6 @@ import * as process from 'process';
     ],
     controllers: [AuthController],
     providers: [AuthService, SharedService, UsersService, TokenService],
-    exports: [AuthService],
+    exports: [AuthService, TokenService],
 })
 export class AuthModule {}
