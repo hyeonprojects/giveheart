@@ -35,7 +35,6 @@ export class AuthService {
         });
 
         // token 발행
-
         return createdUser;
     }
 

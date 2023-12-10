@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as process from 'process';
+import { UsersService } from '../../users/service/users.service';
+import { TokenType } from '../enum/token.enum';
 
 @Injectable()
 export class TokenService {
@@ -8,10 +10,13 @@ export class TokenService {
     private ACCESS_TOKEN_EXP = process.env.ACCESS_TOKEN_EXP;
     private REFRESH_TOKEN_EXP = process.env.REFRESH_TOKEN_EXP;
 
-    constructor(private jwtService: JwtService) {}
+    constructor(
+        private jwtService: JwtService,
+        private userService: UsersService,
+    ) {}
 
     /**
-     * access token
+     * create access token
      * @param id
      * @param email
      */
@@ -27,7 +32,7 @@ export class TokenService {
     }
 
     /**
-     * refresh token
+     * create refresh token
      * @param id
      * @param email
      */
@@ -42,8 +47,51 @@ export class TokenService {
         });
     }
 
-    async verifyToken(token: string) {
-        // token 유저 인정
-        return this.jwtService.verify(token);
+    /**
+     * verify token + check give heart user
+     * @param token
+     * @param type
+     * @private
+     */
+    private async verifyToken(token: string, type: TokenType) {
+        const decoded = this.jwtService.verify(token);
+
+        if (decoded.token_type !== type) {
+            throw new Error('Invalid token');
+        }
+
+        if (decoded.iss !== this.ISS) {
+            throw new Error('Invalid token');
+        }
+
+        const user = await this.userService.findUserById(decoded.sub);
+        if (!user) {
+            throw new Error('Invalid token');
+        }
+
+        if (user.email !== decoded.aud) {
+            throw new Error('Invalid token');
+        }
+
+        if (user.deletedAt) {
+            throw new Error('Invalid token');
+        }
+        return decoded;
+    }
+
+    /**
+     * verify access token
+     * @param token
+     */
+    async verifyAccessToken(token: string) {
+        return this.verifyToken(token, TokenType.ACCESS_TOKEN);
+    }
+
+    /**
+     * verify refresh token
+     * @param token
+     */
+    async verifyRefreshToken(token: string) {
+        return this.verifyToken(token, TokenType.REFRESH_TOKEN);
     }
 }
