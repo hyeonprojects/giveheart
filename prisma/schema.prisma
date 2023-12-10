@@ -14,16 +14,17 @@ enum UserType {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  email     String   @unique
+  id        String    @id @default(uuid()) @db.Uuid
+  email     String    @unique
   password  String
   name      String?
   nickname  String
-  socialId  String   @map("social_id")
-  phone     String   @unique
-  userType  String   @map("user_type")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt() @map("updated_at")
+  socialId  String    @map("social_id")
+  phone     String    @unique
+  userType  String    @map("user_type")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt() @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   @@map("users")
 }

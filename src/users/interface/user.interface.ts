@@ -1,3 +1,5 @@
+import { UserType } from '../enum/users.enum';
+
 export interface CreateUserPayload {
     email: string;
     password: string;
@@ -5,5 +7,5 @@ export interface CreateUserPayload {
     nickname: string;
     socialId: string;
     phone: string;
-    userType: string;
+    userType: UserType;
 }

@@ -1,9 +1,11 @@
-export interface SingInPayload {
+import { UserType } from '../../users/enum/users.enum';
+
+export interface RegisterPayload {
     email: string;
     password: string;
-    name?: string
+    name?: string;
     nickname: string;
     socialId: string;
-    phone: number;
-    userType: string;
+    phone: string;
+    userType: UserType;
 }
