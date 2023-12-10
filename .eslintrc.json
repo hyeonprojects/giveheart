@@ -38,7 +38,8 @@
     "function-paren-newline": ["error", "consistent"],
     "object-property-newline": [
       "error",
-      { "allowAllPropertiesOnSameLine": false }
+      "consistent-as-needed",
+      { "allowAllPropertiesOnSameLine": true }
     ],
     "object-curly-newline": [
       "error",
