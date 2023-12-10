@@ -17,8 +17,7 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException('토큰이 없습니다.');
         }
         try {
-            const payload = await this.tokenService.verifyAccessToken(token);
-            request['user'] = payload;
+            request['user'] = await this.tokenService.verifyAccessToken(token);
         } catch {
             throw new UnauthorizedException('토큰이 유효하지 않습니다.');
         }

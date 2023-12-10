@@ -20,9 +20,8 @@ export class UsersRepository {
     }
 
     async createUser(payload: CreateUserPayload): Promise<User> {
-        const user: User = await this.prisma.user.create({
+        return await this.prisma.user.create({
             data: { ...payload },
         });
-        return user;
     }
 }
