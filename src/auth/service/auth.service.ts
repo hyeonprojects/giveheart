@@ -110,12 +110,12 @@ export class AuthService {
         const decoded = await this.tokenService.verifyRefreshToken(token);
 
         const accessToken = await this.tokenService.createAccessToken(
-            decoded.userId,
+            decoded.sub,
             decoded.email,
         );
 
         const refreshToken = await this.tokenService.createRefreshToken(
-            decoded.userId,
+            decoded.sub,
             decoded.email,
         );
 
