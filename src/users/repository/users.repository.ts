@@ -16,8 +16,6 @@ export class UsersRepository {
     }
 
     async createUser(payload: CreateUserPayload): Promise<User> {
-        return this.prisma.user.create({
-            data: { ...payload },
-        });
+        return this.prisma.user.create({ data: { ...payload } });
     }
 }

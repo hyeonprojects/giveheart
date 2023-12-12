@@ -12,7 +12,7 @@ import {
     RegisterDto,
 } from '../dto/register.dto';
 import { AuthService } from '../service/auth.service';
-import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '../guard/auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')

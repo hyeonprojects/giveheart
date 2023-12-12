@@ -9,17 +9,17 @@ export class SharedService {
     private IV = process.env.IV;
     private KEY = process.env.KEY;
 
-    constructor() {}
-
     async encrypt(encryptText: string) {
-        const cipher = createCipheriv(this.ALGORITHM, this.KEY, this.IV);
+        const key = Buffer.from(this.KEY, 'hex');
+        const cipher = createCipheriv(this.ALGORITHM, key, this.IV);
         let encrypted = cipher.update(encryptText, 'utf8', 'hex');
         encrypted += cipher.final('hex');
         return encrypted;
     }
 
     async decrypt(decryptText: string) {
-        const decipher = createDecipheriv(this.ALGORITHM, this.KEY, this.IV);
+        const key = Buffer.from(this.KEY, 'hex');
+        const decipher = createDecipheriv(this.ALGORITHM, key, this.IV);
         let decrypted = decipher.update(decryptText, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
         return decrypted;
