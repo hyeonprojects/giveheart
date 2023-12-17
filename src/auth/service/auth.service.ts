@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../users/service/users.service';
 import {
     AuthOutput,
@@ -12,7 +12,6 @@ import { CacheService } from '../../shared/cache/cache.service';
 
 @Injectable()
 export class AuthService {
-    private readonly logger = new Logger(AuthService.name);
     constructor(
         private sharedService: SharedService,
         private cacheService: CacheService,
@@ -58,6 +57,11 @@ export class AuthService {
         await this.cacheService.set(
             `refresh_token:${createdUser.id}`,
             refreshToken,
+        );
+
+        await this.cacheService.expire(
+            `refresh_token:${createdUser.id}`,
+            60 * 60 * 24 * 30,
         );
 
         return {
@@ -107,6 +111,11 @@ export class AuthService {
         // cached refresh token
         await this.cacheService.set(`refresh_token:${user.id}`, refreshToken);
 
+        await this.cacheService.expire(
+            `refresh_token:${user.id}`,
+            60 * 60 * 24 * 30,
+        );
+
         return {
             accessToken,
             refreshToken,
@@ -137,6 +146,11 @@ export class AuthService {
         await this.cacheService.set(
             `refresh_token:${decoded.sub}`,
             refreshToken,
+        );
+
+        await this.cacheService.expire(
+            `refresh_token:${decoded.sub}`,
+            60 * 60 * 24 * 30,
         );
 
         return {
