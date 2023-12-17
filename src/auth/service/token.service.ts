@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as process from 'process';
 import { UsersService } from '../../users/service/users.service';
 import { TokenType } from '../enum/token.enum';
+import {
+    ACCESS_TOKEN_EXP,
+    ACCESS_TOKEN_SECRET,
+    ISS,
+    REFRESH_TOKEN_EXP,
+    REFRESH_TOKEN_SECRET,
+} from '../constants/token.constant';
 
 @Injectable()
 export class TokenService {
-    private ISS = process.env.ISS;
-    private ACCESS_TOKEN_EXP = process.env.ACCESS_TOKEN_EXP;
-    private REFRESH_TOKEN_EXP = process.env.REFRESH_TOKEN_EXP;
-
     constructor(
         private jwtService: JwtService,
         private userService: UsersService,
@@ -25,8 +27,8 @@ export class TokenService {
         return this.jwtService.sign(accessTokenPayload, {
             subject: id,
             audience: email,
-            expiresIn: this.ACCESS_TOKEN_EXP,
-            issuer: this.ISS,
+            expiresIn: ACCESS_TOKEN_EXP,
+            issuer: ISS,
             noTimestamp: true,
         });
     }
@@ -41,9 +43,10 @@ export class TokenService {
         return this.jwtService.sign(refreshTokenPayload, {
             subject: id,
             audience: email,
-            expiresIn: this.REFRESH_TOKEN_EXP,
-            issuer: this.ISS,
+            expiresIn: REFRESH_TOKEN_EXP,
+            issuer: ISS,
             noTimestamp: true,
+            secret: REFRESH_TOKEN_SECRET,
         });
     }
 
@@ -54,13 +57,18 @@ export class TokenService {
      * @private
      */
     private async verifyToken(token: string, type: TokenType) {
-        const decoded = this.jwtService.verify(token);
+        const decoded = this.jwtService.verify(token, {
+            secret:
+                type === TokenType.REFRESH_TOKEN
+                    ? REFRESH_TOKEN_SECRET
+                    : ACCESS_TOKEN_SECRET,
+        });
 
         if (decoded.token_type !== type) {
             throw new Error('Invalid token');
         }
 
-        if (decoded.iss !== this.ISS) {
+        if (decoded.iss !== ISS) {
             throw new Error('Invalid token');
         }
 

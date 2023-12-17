@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../users/service/users.service';
 import {
-    LoginPayload,
     AuthOutput,
+    LoginPayload,
     RegisterPayload,
 } from '../interface/auth.interface';
 import { SharedService } from '../../shared/service/shared.service';
