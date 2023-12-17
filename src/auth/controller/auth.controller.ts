@@ -13,6 +13,8 @@ import {
 } from '../dto/register.dto';
 import { AuthService } from '../service/auth.service';
 import { AuthGuard } from '../guard/auth.guard';
+import { TokenInterface } from '../interface/token.interface';
+import { GetToken } from '../guard/auth.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -46,9 +48,8 @@ export class AuthController {
     @ApiOkResponse({ description: '로그아웃 성공' })
     @UseGuards(AuthGuard)
     @Delete('logout')
-    async logout() {
-        // 캐시 제거
-        return 'logout';
+    async logout(@GetToken() token: TokenInterface) {
+        return await this.authService.logout(token.sub);
     }
 
     @ApiOperation({

@@ -123,11 +123,27 @@ export class AuthService {
     }
 
     /**
+     * logout
+     * @param userId
+     */
+    async logout(userId: string): Promise<void> {
+        await this.cacheService.del(`refresh_token:${userId}`);
+    }
+
+    /**
      * Token Refresh
      * @param token
      */
     async tokenRefresh(token: string): Promise<AuthOutput> {
         const decoded = await this.tokenService.verifyRefreshToken(token);
+        // token 유효성 체크
+        const refreshTokenInCache = await this.cacheService.get(
+            `refresh_token:${decoded.sub}`,
+        );
+
+        if (!refreshTokenInCache) {
+            throw new UnauthorizedException('Not User Authenticated');
+        }
 
         const accessToken = await this.tokenService.createAccessToken(
             decoded.sub,
