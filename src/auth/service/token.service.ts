@@ -23,7 +23,7 @@ export class TokenService {
      * @param email
      */
     async createAccessToken(id: string, email: string) {
-        const accessTokenPayload = { token_type: 'access_token' };
+        const accessTokenPayload = { tokenType: 'accessToken' };
         return this.jwtService.sign(accessTokenPayload, {
             subject: id,
             audience: email,
@@ -40,7 +40,7 @@ export class TokenService {
      * @param email
      */
     async createRefreshToken(id: string, email: string) {
-        const refreshTokenPayload = { token_type: 'refresh_token' };
+        const refreshTokenPayload = { tokenType: 'refreshToken' };
         return this.jwtService.sign(refreshTokenPayload, {
             subject: id,
             audience: email,
