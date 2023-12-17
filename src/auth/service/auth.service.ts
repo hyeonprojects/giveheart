@@ -8,12 +8,14 @@ import {
 import { SharedService } from '../../shared/service/shared.service';
 import { User } from '@prisma/client';
 import { TokenService } from './token.service';
+import { CacheService } from '../../shared/cache/cache.service';
 
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
     constructor(
         private sharedService: SharedService,
+        private cacheService: CacheService,
         private usersService: UsersService,
         private tokenService: TokenService,
     ) {}
@@ -52,6 +54,12 @@ export class AuthService {
             createdUser.email,
         );
 
+        // cached refresh token
+        await this.cacheService.set(
+            `refresh_token:${createdUser.id}`,
+            refreshToken,
+        );
+
         return {
             accessToken,
             refreshToken,
@@ -78,8 +86,6 @@ export class AuthService {
             payload.password,
         );
 
-        this.logger;
-
         const encryptedPassword = await this.sharedService.encrypt(
             payload.password,
         );
@@ -98,6 +104,9 @@ export class AuthService {
             user.email,
         );
 
+        // cached refresh token
+        await this.cacheService.set(`refresh_token:${user.id}`, refreshToken);
+
         return {
             accessToken,
             refreshToken,
@@ -109,7 +118,6 @@ export class AuthService {
      * @param token
      */
     async tokenRefresh(token: string): Promise<AuthOutput> {
-        // todo: refresh token 캐쉬
         const decoded = await this.tokenService.verifyRefreshToken(token);
 
         const accessToken = await this.tokenService.createAccessToken(
@@ -120,6 +128,15 @@ export class AuthService {
         const refreshToken = await this.tokenService.createRefreshToken(
             decoded.sub,
             decoded.email,
+        );
+
+        // remove cache refresh token
+        await this.cacheService.del(`refresh_token:${decoded.sub}`);
+
+        // cached refresh token
+        await this.cacheService.set(
+            `refresh_token:${decoded.sub}`,
+            refreshToken,
         );
 
         return {
