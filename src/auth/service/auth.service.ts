@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../users/service/users.service';
 import {
     AuthOutput,
@@ -11,6 +11,7 @@ import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
     constructor(
         private sharedService: SharedService,
         private usersService: UsersService,
@@ -76,6 +77,8 @@ export class AuthService {
         payload.password = await this.sharedService.decodeBase64(
             payload.password,
         );
+
+        this.logger;
 
         const encryptedPassword = await this.sharedService.encrypt(
             payload.password,

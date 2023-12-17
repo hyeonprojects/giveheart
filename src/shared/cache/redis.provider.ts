@@ -8,6 +8,6 @@ export const redisProvider: FactoryProvider<Redis> = {
     inject: [ConfigService],
     provide: REDIS_PROVIDER,
     useFactory: async (configService: ConfigService) => {
-        return new Redis(6379, configService.get<string>('REDIS_URL'));
+        return new Redis(6379, configService.get<string>('REDIS_HOST'));
     },
 };

@@ -15,9 +15,7 @@ import { PrismaModule } from '../prisma/prisma.module';
         UsersModule,
         PrismaModule,
         PassportModule,
-        JwtModule.register({
-            secret: process.env.JWT_SECRET,
-        }),
+        JwtModule.register({ secret: process.env.JWT_SECRET }),
     ],
     controllers: [AuthController],
     providers: [AuthService, SharedService, UsersService, TokenService],

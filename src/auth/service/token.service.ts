@@ -30,6 +30,7 @@ export class TokenService {
             expiresIn: ACCESS_TOKEN_EXP,
             issuer: ISS,
             noTimestamp: true,
+            secret: ACCESS_TOKEN_SECRET,
         });
     }
 

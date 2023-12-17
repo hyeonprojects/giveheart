@@ -4,8 +4,7 @@ import { createCipheriv, createDecipheriv } from 'crypto';
 
 @Injectable()
 export class SharedService {
-    private SALT = process.env.SALT;
-    private ALGORITHM = 'aes-256-gcm';
+    private ALGORITHM = process.env.ALGORITHM;
     private IV = process.env.IV;
     private KEY = process.env.KEY;
 
