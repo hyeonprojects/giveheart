@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
     imports: [
@@ -13,7 +14,13 @@ import { ConfigModule } from '@nestjs/config';
         AuthModule,
         UsersModule,
         SharedModule,
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({ isGlobal: true, cache: true }),
+        BullModule.forRoot({
+            redis: {
+                host: process.env.REDIS_HOST,
+                port: 6379,
+            },
+        }),
     ],
     controllers: [AppController],
     providers: [AppService],
