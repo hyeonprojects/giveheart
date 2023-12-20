@@ -15,12 +15,6 @@ import { BullModule } from '@nestjs/bull';
         UsersModule,
         SharedModule,
         ConfigModule.forRoot({ isGlobal: true, cache: true }),
-        BullModule.forRoot({
-            redis: {
-                host: process.env.REDIS_HOST,
-                port: 6379,
-            },
-        }),
     ],
     controllers: [AppController],
     providers: [AppService],
