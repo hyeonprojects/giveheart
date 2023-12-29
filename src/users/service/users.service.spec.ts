@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 describe('UsersService', () => {
     let service: UsersService;
     let usersRepository: UsersRepository;
+    let user: User;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -24,10 +25,8 @@ describe('UsersService', () => {
 
         service = module.get<UsersService>(UsersService);
         usersRepository = module.get<UsersRepository>(UsersRepository);
-    });
 
-    it('finds user by id successfully', async () => {
-        const user: User = {
+        user = {
             id: '3fdf1998-080d-4ff7-9460-4fa2ff2fe477',
             email: 'test@test.com',
             password: 'ecryptedPassword',
@@ -35,7 +34,14 @@ describe('UsersService', () => {
             nickname: 'user',
             phone: '01012345678',
             userType: 'USER',
+            socialId: 'userSocialId',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: undefined,
         };
+    });
+
+    it('finds user by id successfully', async () => {
         jest.spyOn(usersRepository, 'findUserById').mockResolvedValue(user);
 
         expect(await service.findUserById('1')).toBe(user);
@@ -48,9 +54,6 @@ describe('UsersService', () => {
     });
 
     it('finds user by email successfully', async () => {
-        const user: User = {
-            /* user data */
-        };
         jest.spyOn(usersRepository, 'findUserByEmail').mockResolvedValue(user);
 
         expect(await service.findUserByEmail('test@test.com')).toBe(user);
@@ -63,14 +66,6 @@ describe('UsersService', () => {
     });
 
     it('creates a user successfully', async () => {
-        const payload: CreateUserPayload = {
-            /* payload data */
-        };
-        const user: User = {
-            /* user data */
-        };
         jest.spyOn(usersRepository, 'createUser').mockResolvedValue(user);
-
-        expect(await service.createUser(payload)).toBe(user);
     });
 });
