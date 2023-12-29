@@ -169,7 +169,7 @@ export class CacheService {
         key: string,
         field: string,
         increment: number,
-    ): Promise<number> {
+    ): Promise<string> {
         return this.redis.hincrbyfloat(key, field, increment);
     }
 
@@ -262,7 +262,7 @@ export class CacheService {
         return this.redis.zcount(key, min, max);
     }
 
-    async zscore(key: string, value: string): Promise<number> {
+    async zscore(key: string, value: string): Promise<string> {
         return this.redis.zscore(key, value);
     }
 
@@ -282,7 +282,7 @@ export class CacheService {
         key: string,
         increment: number,
         value: string,
-    ): Promise<number> {
+    ): Promise<string> {
         return this.redis.zincrby(key, increment, value);
     }
 
@@ -302,14 +302,5 @@ export class CacheService {
         ...keys: string[]
     ): Promise<number> {
         return this.redis.zinterstore(destination, numkeys, key, ...keys);
-    }
-
-    async zscan(
-        key: string,
-        cursor: number,
-        match?: string,
-        count?: number,
-    ): Promise<[string, string[]]> {
-        return this.redis.zscan(key, cursor, match, count);
     }
 }
