@@ -15,6 +15,10 @@ export class UsersRepository {
         return this.prisma.user.findFirst({ where: { email } });
     }
 
+    async findUserByPhone(phone: string): Promise<User | null> {
+        return this.prisma.user.findFirst({ where: { phone } });
+    }
+
     async createUser(payload: CreateUserPayload): Promise<User> {
         return this.prisma.user.create({ data: { ...payload } });
     }

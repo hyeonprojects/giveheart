@@ -9,6 +9,9 @@ import { TokenService } from './service/token.service';
 import * as process from 'process';
 import { UsersModule } from '../users/users.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { SocialService } from './service/social.service';
+import { HttpModule } from '@nestjs/axios';
+import { SocialController } from './controller/social.controller';
 
 @Module({
     imports: [
@@ -16,9 +19,21 @@ import { PrismaModule } from '../prisma/prisma.module';
         PrismaModule,
         PassportModule,
         JwtModule.register({ secret: process.env.JWT_SECRET }),
+        HttpModule.registerAsync({
+            useFactory: () => ({
+                timeout: 5000,
+                maxRedirects: 3,
+            }),
+        }),
     ],
-    controllers: [AuthController],
-    providers: [AuthService, SharedService, UsersService, TokenService],
+    controllers: [AuthController, SocialController],
+    providers: [
+        AuthService,
+        SharedService,
+        UsersService,
+        TokenService,
+        SocialService,
+    ],
     exports: [AuthService, TokenService],
 })
 export class AuthModule {}

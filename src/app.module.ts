@@ -6,7 +6,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
-import { BullModule } from '@nestjs/bull';
 
 @Module({
     imports: [
@@ -14,7 +13,10 @@ import { BullModule } from '@nestjs/bull';
         AuthModule,
         UsersModule,
         SharedModule,
-        ConfigModule.forRoot({ isGlobal: true, cache: true }),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            cache: true,
+        }),
     ],
     controllers: [AppController],
     providers: [AppService],
